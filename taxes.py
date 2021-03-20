@@ -26,7 +26,7 @@ class Taxes():
 
     def run(self, trades=None, errors=None):
         rates = ExchangeRates().update_exchange_rates()
-        print "running Trades"
+        print ("running Trades")
         trades, errors = self.run_trades()
         self.print_trade_info(trades)
         self.print_errors(errors)
@@ -52,7 +52,7 @@ class Taxes():
         return df
 
     def write_files(self, trades, errors, pnl, total_pnl, tax_reporting_data):
-        print "Writing final data to files in output/ folder"
+        print ("Writing final data to files in output/ folder")
         for _ in ['trades', 'pnl', 'total_pnl', 'tax_reporting_data']:
             eval("{f}.to_csv(os.path.join('output', '{f}.csv'))".format(f=_))
 
@@ -64,14 +64,14 @@ class Taxes():
         tax_reporting_data.to_csv(os.path.join('data', 'tax_reporting_data.csv'))
 
     def print_errors(self, errors):
-        print "\nTrades not included:"
+        print ("\nTrades not included:")
         for exception in [TradeTooSmallException, NotATradeException]:
             count = len([_ for _ in errors if isinstance(_, exception)])
-            print "{e:<25} {c}".format(e=exception.__name__, c=count)
-        print "\n"
+            print ("{e:<25} {c}".format(e=exception.__name__, c=count))
+        print ("\n")
 
     def print_trade_info(self, trades):
-        print "\nTrade counts"
-        print "{p:<25} {c:<10}".format(p='Total Trades', c=len(trades))
+        print ("\nTrade counts")
+        print ("{p:<25} {c:<10}".format(p='Total Trades', c=len(trades)))
         for _ in trades.platform.unique():
-            print "{:<25}".format(_), "{:<10}".format(len(trades[trades['platform'] == _]))
+            print ("{:<25}".format(_), "{:<10}".format(len(trades[trades['platform'] == _])))

@@ -58,10 +58,10 @@ class ExchangeRates(object):
         rates = self.parse_file(self.path)
         try:
             max_date = self.get_max_date(rates)
-            print "Updating exchange rates from %s" % max_date
+            print ("Updating exchange rates from %s" % max_date)
             new_rates = self.get_exchange_rates(max_date)
         except UpdateExchangeRateException as exc:
-            print exc
+            print (exc)
             return
         self.update_file(self.path, new_rates)
 
@@ -77,7 +77,7 @@ class ExchangeRates(object):
         rates = {}
         for date in daterange:
             if date.weekday() == 0:
-                print "Updating exchange rate data for week of %s..." % date
+                print ("Updating exchange rate data for week of %s..." % date)
             rates[date] = {}
             for currency in self.base_currencies:
                 url = self.get_url(currency, date)

@@ -60,7 +60,7 @@ class SalesCalculator():
         return current_exchange_rates.ExchangeRates().run()
 
     def find_min_max_pnl(self, sales):
-        print "Max sales while not impacting current capital gains (PNL):"
+        print ("Max sales while not impacting current capital gains (PNL):")
         summary = {}
         for _ in sales.currency.unique():
             copy = sales[sales['currency'] == _].copy()
@@ -70,17 +70,17 @@ class SalesCalculator():
                 'max_sales_pnl': round(copy.pnl.sum()),
             }
 
-            print "{:<6}".format(_), "Total Sales: ", "{:<10}".format(summary[_]['max_sales_usd']), "Amount to sell: ", \
+            print ("{:<6}".format(_), "Total Sales: ", "{:<10}".format(summary[_]['max_sales_usd']), "Amount to sell: ", \
                 "{:<14}".format(summary[_]['max_sales_amt']), "Impact to PNL: ", "{:<10}".format(summary[_]['max_sales_pnl'])
 
         summary['total_max'] = {
             'max_sales_usd': round(sales.sales.sum()),
             'max_sales_pnl': round(sales.pnl.sum()),
         }
-        print "Max Sales: ", "{:<10}".format(summary['total_max']['max_sales_usd']), \
-            "Max PNL loss: ", "{:<10}".format(summary['total_max']['max_sales_pnl']), "\n"
+        print ("Max Sales: ", "{:<10}".format(summary['total_max']['max_sales_usd']), \
+            "Max PNL loss: ", "{:<10}".format(summary['total_max']['max_sales_pnl']), "\n")
 
-        print "\nMax sales in order to minimize current capital gains (PNL)"
+        print ("\nMax sales in order to minimize current capital gains (PNL)")
         r_s = 0
         r_p = 0
         for _ in sales.currency.unique():
@@ -96,14 +96,14 @@ class SalesCalculator():
             summary[_]['min_sales_amt'] = rolling_amount
             summary[_]['min_sales_pnl'] = rolling_pnl
 
-            print "{:<6}".format(_), "Total Sales: ", "{:<10}".format(rolling_sales), "Amount to sell: ", \
-                "{:<14}".format(rolling_amount), "Impact to PNL: ", "{:<10}".format(rolling_pnl)
+            print ("{:<6}".format(_), "Total Sales: ", "{:<10}".format(rolling_sales), "Amount to sell: ", \
+                "{:<14}".format(rolling_amount), "Impact to PNL: ", "{:<10}".format(rolling_pnl))
 
         summary['total_min'] = {
             'min_sales_usd': r_s,
             'min_sales_pnl': r_p,
         }
-        print "Max Sales: ", "{:<10}".format(r_s), "Max PNL loss: ", "{:<10}".format(r_p)
+        print ("Max Sales: ", "{:<10}".format(r_s), "Max PNL loss: ", "{:<10}".format(r_p)))
 
         return summary
 
@@ -112,22 +112,22 @@ class SalesCalculator():
         # and the summary sales data from min_max_pnl
         sales = 0
         pnl = total_pnl[total_pnl['year'] == 2018].pnl.sum()
-        print "Current capital gains (PNL): ", pnl, "\n"
+        print ("Current capital gains (PNL): ", pnl, "\n")
 
-        print "Selling assets in order to minimize current capital gains (PNL):"
+        print ("Selling assets in order to minimize current capital gains (PNL):")
         for _ in coins_to_sell:
             sales += summary[_]['min_sales_usd']
             pnl += summary[_]['min_sales_pnl']
-            print "{:<10}".format(_), "${:<10} in sales".format(summary[_]['min_sales_usd'])
+            print ("{:<10}".format(_), "${:<10} in sales".format(summary[_]['min_sales_usd']))
 
-        print "Total sold (USD): {:<10} Final PNL: ".format(sales), "{:<}\n".format(pnl)
+        print ("Total sold (USD): {:<10} Final PNL: ".format(sales), "{:<}\n".format(pnl))
 
-        print "Selling assets in order to maximize sales while not impacting current capital gains (PNL)"
+        print ("Selling assets in order to maximize sales while not impacting current capital gains (PNL)")
         sales = 0
         pnl = total_pnl[total_pnl['year'] == 2018].pnl.sum()
         for _ in coins_to_sell:
             sales += summary[_]['max_sales_usd']
             pnl += summary[_]['max_sales_pnl']
-            print "{:<10}".format(_), "${:<10} in sales".format(summary[_]['max_sales_usd'])
+            print ("{:<10}".format(_), "${:<10} in sales".format(summary[_]['max_sales_usd']))
 
-        print "Total sold (USD): {:<10} Final PNL: ".format(sales), "{:<}".format(pnl)
+        print ("Total sold (USD): {:<10} Final PNL: ".format(sales), "{:<}".format(pnl))

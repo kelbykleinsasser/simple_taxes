@@ -14,12 +14,12 @@ class LIFO(object):
     def __init__(self):
         pass
 
-    def run(self, trades):
-        print "Generating LIFO profit and loss"
+    def run(self, trades):          
+        print ("Generating LIFO profit and loss")
         pnl = pd.DataFrame()
         remaining_funds = pd.DataFrame()
         for currency in trades.currency.unique():
-            print "Calculating LIFO for {}".format(currency)
+            print ("Calculating LIFO for {}".format(currency))
             curr_trades = self.generate_currency_trades(trades, currency)
             curr_pnl, curr_rf = self.calc_pnl(curr_trades)
             pnl = self.append_currency_pnl_to_total_pnl(pnl, curr_pnl, currency)
@@ -35,8 +35,10 @@ class LIFO(object):
         return remaining_funds
 
     def generate_currency_trades(self, df, currency):
-        native = df[df['currency'] == currency][[
-            'created_at', 'platform', 'currency', 'currency_pair', 'type', 'amount', 'basis']].copy()
+        native = df[df['currency'] == currency] \
+            [[
+                'created_at', 'platform', 'currency', 'currency_pair', 'type', 'amount', 'basis' \
+            ]].copy()
 
         fills = df[df['fill_currency'] == currency][[
             'created_at', 'currency', 'currency_pair', 'fill_type', 'fill_amount', 'fill_basis']].copy()
@@ -57,7 +59,7 @@ class LIFO(object):
         return pnl.append(curr_pnl)
 
     def aggregate_pnl(self, pnl):
-        print "Calculating aggregate LIFO profit and loss"
+        print ("Calculating aggregate LIFO profit and loss")
         agg_pnl = {}
         for _ in pnl.year.unique():
             agg_pnl[_] = {}
@@ -212,25 +214,25 @@ class LIFO(object):
         if log:
             raise AssertionError("You are trying to sell more than you have purchased. See above for details")
         balance = sum([_.amount for _ in queue])
-        print "You are trying to sell more %s than you have purchased" % row['currency']
-        print "Error occured when trying to sell {s} {c}, when you have {a} available to sell".format(
+        print ("You are trying to sell more %s than you have purchased" % row['currency'])
+        print ("Error occured when trying to sell {s} {c}, when you have {a} available to sell".format(
           s=round(sell_amount, 2),
           c=row['currency'],
           a=round(balance, 2) if balance else 0,
-        )
-        print "You must be missing some trade or gift that resulted in more %s\n" % row['currency']
-        print "This is the trade that caused the error: \n%s\n" % row
-        print "Re-creating the history of buys and sells..."
+        ))
+        print ("You must be missing some trade or gift that resulted in more %s\n" % row['currency'])
+        print ("This is the trade that caused the error: \n%s\n" % row)
+        print ("Re-creating the history of buys and sells...")
         self.calc_pnl(df, log=True)
 
     def print_statement(self, log, queue, row, sell_amount, buy_amount):
         if not log:
             return
         balance = sum([_.amount for _ in queue])
-        print "Date {d} selling: {s:<10} purchasing: {p:<10} balance: {b:<10} platform: {e}".format(
+        print ("Date {d} selling: {s:<10} purchasing: {p:<10} balance: {b:<10} platform: {e}".format(
             d=row['created_at'],
             s=round(sell_amount, 2) if sell_amount else '',
             p=round(buy_amount, 2) if buy_amount else '',
             b=round(balance, 2) if balance else '',
-            e=row['platform']
+            e=row['platform'])
         )

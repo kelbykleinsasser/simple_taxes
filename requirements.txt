@@ -1,2 +1,2 @@
-cached-property==1.4.3
-xlrd==1.1.0
+cached-property==1.5.2
+xlrd==2.0.1
