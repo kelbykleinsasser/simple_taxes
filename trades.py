@@ -44,11 +44,11 @@ class Trades():
         trades = []
         errors = []
         for exchange in parsers.keys():
-            print "Processing trades from {}".format(exchange)
+            print ("Processing trades from {}".format(exchange))
             for _file in glob.glob('./data/{}/*'.format(exchange)):
                 filename = self.process_filename(_file)
                 if filename[0] == '.':
-                    print "Skipping folder in {}".format(exchange)
+                    print ("Skipping folder in {}".format(exchange))
                     continue
                 else:
                     trade, error = parsers[exchange]().run(os.path.join('data', exchange, filename))
@@ -65,7 +65,7 @@ class Trades():
         return body + '.' + filetype
 
     def dict_to_df(self, _dict):
-        print "Finalizing trades"
+        print ("Finalizing trades")
         df = pd.DataFrame()
         for trade in _dict:
             df = df.append(trade, ignore_index=True)
